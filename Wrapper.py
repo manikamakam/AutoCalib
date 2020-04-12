@@ -196,19 +196,24 @@ def rms_error(K,D,H,corner_pts):
 	world_pts = []
 	for i in range(6):
 		for j in range(9):
-			world_pts.append([21.5*(j+1),21.5*(i+1),0,1])
+			world_pts.append([21.5*(j+1),21.5*(i+1),0])
 
-	world_pts = np.array(world_pts,dtype='float32')
+	world_pts = np.array(world_pts,dtype='float64')
+	K = K.astype('float64')
+	D = D.astype('float64')
+	
 
 	mean = 0
 	error = np.zeros([2,1])
 	for i in range(H.shape[2]):
 		Rt = get_extrinsic_params(K,H[:,:,i])
+		Rt = Rt.astype('float64')
 		print(world_pts.dtype)
+		print(world_pts.shape)
 		print(Rt.dtype)
 		print(K.dtype)
 		print(D.dtype)
-
+		print(Rt[:,0:3].shape)
 		img_pts, _ = cv2.projectPoints(world_pts, Rt[:,0:3], Rt[:,3], K, D)
 
 		img_pts = np.array(img_pts,dtype='float32')
